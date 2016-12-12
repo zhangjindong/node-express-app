@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>
+        <%=title|| ''%>
+    </title>
+    <link href="/javascripts/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" media="screen" />
+    <link href="/javascripts/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <script src="/javascripts/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap-paginator/build/bootstrap-paginator.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="/js/admin/movie.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">首页</a>
+            <ul class="nav navbar-nav">
+                <li class="">
+                    <a href="/home">电影</a>
+                </li>
+                <li class="active">
+                    <a href="#">电影管理</a>
+                </li>
+                <li>
+                    <a href="#">影院</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <!-- 代码片断 -->
+        <div class="page-header">
+            <h1>电影管理
+            <a class="btn btn-primary" target="_blank" href="/movie/add" role="button">增加新电影</a></h1>
+        </div>
+        <form class="form-horizontal well " method="GET">
+            <div class="form-group ">
+                <label class="col-sm-2" for="jqName">电影名称（精确）</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="<%=search.jqName||'' %>" name="jqName" id="jqName">
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2" for="mhName">电影名称（模糊）</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="<%=search.mhName||'' %>" name="mhName" id="mhName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2" for="mhType">类型</label>
+                <div class="col-sm-10">
+                    <select name="mhType" id="mhType" class="form-control selectpicker show-tick" data-size="5" multiple value="<%=search.mhType||'' %>">
+                        <option>科幻</option>
+                        <option>剧情</option>
+                        <option>犯罪</option>
+                        <option>西部</option>
+                        <option>爱情</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <button class="btn btn-primary">查询</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- 代码片段 分页控件 -->
+    <div class="col-md-12">
+        <!-- pageCount 
+：总页数
+pageNum
+：当前页数
+pageSize
+：当前页条数
+page Limit
+：每页限制条数
+numberOfPages
+：显示总页数 -->
+        <div id="page1" pageCount="<%=page.pageCount%>" pageNum="<%=page.num %>" pageSize="<%=page.size%>" pageLimit="<%=page.limit%>" numberOfPages="<%=page.numberOf%>"></div>
+    </div>
+    <!-- 代码片段 查询结果 -->
+    <div class="col-md-12">
+        <div id="msg"></div>
+        <table class="table table-hover">
+            <caption>所有电影</caption>
+            <thead>
+                <tr>
+                    <th>电影封面</th>
+                    <th>电影</th>
+                    <th>类型</th>
+                    <th>收录时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% movieList.forEach(function(movie){ %>
+                    <tr>
+                        <td>
+                            <input type="hidden" name="_id" value="<%=movie._id%>"><img class="img-thumbnail img-responsive " src="<%=movie.images.coverSmall%>" alt="..." /></td>
+                        <td>
+                            <p>片名：<strong><%=movie.name%></strong>
+                                <br>别名：<i><%=movie.alias.join(',')%></i>
+                                <br>上映：<i><%=movie.publish%></i>
+                                <br>导演：<i><%=movie.name%></i>
+                                <br>
+                            </p>
+                        </td>
+                        <td></td>
+                        <td>
+                            <datetime-local></datetime-local>
+                        </td>
+                        <td>
+                            <a class="btn btn-default" target="_blank" href="/movie/<%=movie.name%>" role="button">编辑</a>
+                            <button type="button" class="btn btn-default btn-delete-movie" value="<%=movie._id%>">删除</button>
+                            <button type="button" class="btn btn-default">分类</button>
+                            <a class="btn btn-default" target="_blank" href="<%=movie.source[0].link%>" role="button">预览</a>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <!-- 代码片段 -->
+    <script type="text/javascript">
+    $(function() {
+
+        //下拉菜单
+        $('.selectpicker').selectpicker({
+            noneSelectedText: '请选择'
+        });
+        $('.selectpicker').selectpicker('val', $('.selectpicker').attr('value'));
+        //获得浏览器参数
+        $.extend({
+            getUrlVars: function() {
+                var vars = [],
+                    hash;
+                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < hashes.length; i++) {
+                    hash = hashes[i].split('=');
+                    vars.push(hash[0]);
+                    vars[hash[0]] = hash[1];
+                }
+                return vars;
+            },
+            getUrlVar: function(name) {
+                return $.getUrlVars()[name];
+            }
+        });
+
+        //封装浏览器参数
+        var composeUrlParams = function() {
+            var param = '';
+            $.each($.getUrlVars(), function(i, item) {
+                if (item != 'p') {
+                    var val = $.getUrlVar(item);
+                    if (val) param += "&" + item + "=" + val;
+                }
+            });
+            return param;
+        }
+
+        //分页功能
+        var page = $('#page1');
+        var options = {
+            currentPage: page.attr('pageNum'),
+            totalPages: page.attr('pageCount'),
+            numberOfPages: page.attr('numberOfPages'),
+            pageUrl: function(type, page, current) {
+                return "/admin/movie?" + composeUrlParams() + "&p=" + page;
+            }
+        }
+        $('#page1').bootstrapPaginator(options);
+    })
+    </script>
+</body>
+
+</html>

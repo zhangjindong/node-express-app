@@ -1,0 +1,8 @@
+[2016-10-21 11:42:40.085] [INFO] normal - GET /admin/movie?jqName=&mhName=
+[2016-10-21 11:42:40.123] [WARN] normal - GET /javascripts/bootstrap-select/dist/js/bootstrap-select.min.js
+[2016-10-21 11:42:40.139] [WARN] normal - GET /javascripts/bootstrap-select/dist/css/bootstrap-select.min.css
+[2016-10-21 11:42:40.150] [WARN] normal - GET /javascripts/bootstrap/dist/css/bootstrap.min.css
+[2016-10-21 11:42:40.157] [WARN] normal - GET /javascripts/jquery/dist/jquery.min.js
+[2016-10-21 11:42:40.169] [WARN] normal - GET /javascripts/bootstrap/dist/js/bootstrap.min.js
+[2016-10-21 11:42:40.184] [WARN] normal - GET /js/admin/movie.js
+[2016-10-21 11:42:40.193] [WARN] normal - GET /javascripts/bootstrap-paginator/build/bootstrap-paginator.min.js
